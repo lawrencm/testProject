@@ -18,6 +18,12 @@ module.exports = {
   	nickname: 'string'
   	*/
     
-  }
+  },
+
+//Lifecycle Callbacks
+    afterUpdate: function(values, next) {
+       console.log("update occured");
+        next();
+    }
 
 };

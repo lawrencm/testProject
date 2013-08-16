@@ -25,6 +25,7 @@ module.exports = {
         var reqId = req.param('reqId');
         Requirement.findOne({ id: reqId }).done(function(err,requirement){
             res.view({
+                reqId:reqId,
                 requirement:requirement
             });
 

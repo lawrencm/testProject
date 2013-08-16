@@ -1,186 +1,225 @@
 <!DOCTYPE html>
-<html ng-app="requirementModule">
+<html>
 <head>
-	<title>Bootstrap 101 Template</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Bootstrap -->
+    <title>Bootstrap 101 Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
 
-	<script src="/js/angular.min.js"></script>
+    <script type="text/javascript"
+            src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.min.js"></script>
+    <script type="text/javascript"
+            src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-animate.min.js"></script>
 
 
+    <link href="/styles/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="/styles/bootstrap-glyphicons.css" rel="stylesheet" media="screen">
 
-	<link href="/styles/bootstrap.css" rel="stylesheet" media="screen">
-	<link href="/styles/bootstrap-glyphicons.css" rel="stylesheet" media="screen">
+
+    <style type="text/css">
+        .animate, .rowanim {
+            -webkit-transition: linear 1s;
+            transition: linear 1;
+        }
+
+        .animate.ng-enter,
+        .rowanim.ng-enter {
+            opacity: 0;
+        }
+
+        .animate.ng-enter-active,
+        .rowanim.ng-enter-active {
+            opacity: 1;
+        }
+
+        .animate.ng-leave,
+        .rowanim.ng-leave {
+            opacity: 1;
+        }
+
+        .animate.ng-leave-active,
+        .rowanim.ng-leave-active {
+            opacity: 0;
+        }
+
+        table td {
+            color: #000;
+            -webkit-transition: linear 1s;
+        }
+
+        @keyframes myfirst {
+            100% {
+                color: black;
+                background-color: white
+            }
+            50% {
+                color: green;
+                background-color: rgba(0, 255, 0, 0.19)
+            }
+            100% {
+                color: black;
+                background-color: white
+            }
+
+        }
+
+        @-webkit-keyframes myfirst /* Safari and Chrome */
+        {
+            100% {
+                color: black;
+                background-color: white
+            }
+            50% {
+                color: green;
+                background-color: rgba(0, 255, 0, 0.19)
+            }
+            100% {
+                color: black;
+                background-color: white
+            }
+        }
+
+        table td.notify {
+            animation: myfirst 2s;
+            -webkit-animation: myfirst 2s;
+        }
+
+
+    </style>
 
 </head>
-<body ng-app>
+<body>
 
 
-
-
-
-
-
-
-
-	<div class="container" ng-controller="FetchRequirements">
+<div class="container"  ng-app="RequirementMaster"  ng-controller="requirementMasterController">
+    <div id="xx" class="zz" contenteditable="true" ng-model="status" >dddd</div>
     <% if (user){ %>
-	<h1>You are logged in as <img src="<%= user.avatar %>" style="wdith:32px;height:32px" alt="<%=user.uid%>"/><%= user.appDisplayName() %></h1>
-
+    <h1>You are logged in as <img src="<%= user.avatar %>" style="wdith:32px;height:32px" alt="<%=user.uid%>"/><%=
+        user.appDisplayName() %></h1>
     <% }; %>
 
-		<!-- Modal -->
-		<div class="modal fade" id="myModal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Edit Requirement: {{activeRec.id}} </h4>
-					</div>
-					<div class="modal-body">
-						<form>
-							<fieldset>
-								<!-- <legend>Legend</legend> -->
+    <!-- Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Edit Requirement: {{activeRec.id}} </h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <fieldset>
+                            <!-- <legend>Legend</legend> -->
 
-								<div class="form-group">
-									<label for="title">Title</label>
-									<input type="text" class="form-control" id="title" placeholder="Title"  required ng-model="activeRec.title">
-								</div>
-
-
-
-								<div class="form-group">
-									<label for="importance">Importance</label>
-									<select class="form-control" name="importance" ng-model="activeRec.importance" ng-options="i.value as i.name for i in moscowOptions">
-
-									</select>
-								</div> 
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" id="title" placeholder="Title" required
+                                       ng-model="activeRec.title">
+                            </div>
 
 
-								<!-- <button type="submit" class="btn btn-default">Submit</button> -->
-							</fieldset>
-						</form>
+                            <div class="form-group">
+                                <label for="importance">Importance</label>
+                                <select class="form-control" id="importance" name="importance"
+                                        ng-model="activeRec.importance"
+                                        ng-options="i.value as i.name for i in moscowOptions">
+
+                                </select>
+                            </div>
 
 
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" ng-click="closeEditForm()" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" ng-click="setEditReq()" data-dismiss="modal">Save changes</button>
-					</div>
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->    
-
-		<div class="alert alert-success">{{status}}</div>
+                            <!-- <button type="submit" class="btn btn-default">Submit</button> -->
+                        </fieldset>
+                    </form>
 
 
-		<pre>http status code: {{status}}</pre>
-		<!-- <pre>http response data: {{data | json}}</pre> -->
-		<!-- <button ng-click="updateModel('GET', '/requirement')">update</button> -->
-
-<a href="#" data-toggle="tooltip" title="first tooltip">Hover over me</a>
-       <table class="table table-hover" id="req-table">
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>title</th>
-					<th>importance</th>
-					<th>category</th>
-					<th>Last Updated</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="req in data" ng-dblclick="viewRequirement(req.id)" id="requirement{{reqid}}">
-					<td>{{req.id}}</td>
-					<td>{{req.title}}</td>
-					<td>{{req.importance|moscow}}</td>
-					<td>{{req.category}}</td>
-					<td>{{ req.updatedAt | date:'medium'}}</td>
-                    <td>
-
-                        <div class="warpper" style="position:relative">
-
-
-                        <div class="dropdown">
-                            <a id="drop6" role="button" data-toggle="dropdown" href="#" class="btn btn-primary btn-small glyphicon glyphicon-cog"></a>
-                            <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#myModal" class="glyphicon glyphicon-pencil req-edit" ng-click="updateLocalDataItem(req.id,'active')"> Edit Requirement</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="destroyReq(req.id)" class="glyphicon glyphicon-trash req-destroy"> Delete Requirement</a></li>
-                                <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>-->
-                                <!--<li role="presentation" class="divider"></li>-->
-                                <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>-->
-                            </ul>
-                        </div>
-                        </div>
-
-
-                        <!--<div class="dropdown">-->
-                            <!--<a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">-->
-                                <!--Dropdown <span class="caret"></span>-->
-                            <!--</a>-->
-                            <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">-->
-                                <!--...-->
-                            <!--</ul>-->
-
-
-                        <!--<div class="dropdown">-->
-                            <!--&lt;!&ndash; Link or button to toggle dropdown &ndash;&gt;-->
-                            <!--<a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">-->
-                                <!--Dropdown <span class="caret"></span>-->
-                            <!--</a>-->
-
-                            <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">-->
-                                <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>-->
-                                <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>-->
-                                <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>-->
-                                <!--<li role="presentation" class="divider"></li>-->
-                                <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>-->
-                            <!--</ul>-->
-                        <!--</div>-->
-
-
-                        <!--<div class="dropdown">-->
-                            <!--<a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">-->
-                                <!--Dropdown <span class="caret"></span>-->
-                            <!--</a>-->
-                            <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">-->
-                                <!--...-->
-                            <!--</ul>-->
-                        <!--</div>-->
-
-                        <!--<div id="req-actions-list-{{req.id}}" style="display:none">-->
-                            <!--<p><a data-toggle="modal" title="Edit requirent {{req.id}}" href="#myModal" class="glyphicon glyphicon-pencil req-edit" ng-click="updateLocalDataItem(req.id,'active')">Edit Requirement</a></p>-->
-                            <!--<p><a ng-click="destroyReq(req.id)" title="Delete requirent {{req.id}}"  class="glyphicon glyphicon-trash req-destroy">Delete Requirement</a></p>-->
-                        <!--</div>-->
-
-                    </td>
-
-					</tr>
-
-           </tbody>
-			</table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" ng-click="closeEditForm()" data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="setEditReq()" data-dismiss="modal">Save
+                        changes
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 
 
 
 
 
+    <table class="table table-hover" id="req-table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>title</th>
+            <th>importance</th>
+            <th>category</th>
+            <th>Last Updated</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
 
-		</div>
+        <tr ng-repeat="req in data" class="animate" ng-dblclick="viewRequirement(req.id)" id="requirement{{reqid}}">
+            <td>{{req.id}}</td>
 
 
+            <td contenteditable="true" ng-model="req.title" ng-bind-template="{{req.title}}" class="clean" notifychange></td>
+            <td ng-model="req.importance" ng-bind-template="{{req.importance | moscow}}"  class="clean" notifychange>
+            <!--<td>-->
+                <!--<select class="form-control" name="importance" ng-model="req.importance" ng-options="i.value as i.name for i in moscowOptions">-->
+
+            </td>
+            <td contenteditable="true" ng-model="req.category" ng-bind-template="{{eq.category}}" class="clean" notifychange></td>
+            <td ng-bind-template="{{ req.updatedAt | date:'medium'}}" class="clean" notifychange></td>
+            <td>
+
+                <div class="warpper" style="position:relative">
 
 
-		<!-- JavaScript plugins (requires jQuery) -->
-		<script src="/js/jquery.1.10.2.js"></script>
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="/js/bootstrap.js"></script>
+                    <div class="dropdown">
+                        <a id="drop6" role="button" data-toggle="dropdown" href="#"
+                           class="btn btn-primary btn-small glyphicon glyphicon-cog"></a>
+                        <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#myModal"
+                                                       class="glyphicon glyphicon-pencil req-edit"
+                                                       ng-click="updateLocalDataItem(req.id,'active')"> Edit
+                                Requirement</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="destroyReq(req.id)"
+                                                       class="glyphicon glyphicon-trash req-destroy"> Delete
+                                Requirement</a></li>
+                            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>-->
+                            <!--<li role="presentation" class="divider"></li>-->
+                            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+            </td>
 
-		<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-		<script src="js/respond.js"></script>
+        </tr>
 
-		<script src="/js/script.js"></script>
+        </tbody>
+    </table>
 
-	</body>
-	</html>
+
+</div>
+
+
+<!-- JavaScript plugins (requires jQuery) -->
+<script src="/js/jquery.1.10.2.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="js/respond.js"></script>
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

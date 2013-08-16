@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-animate.min.js"></script>
+
+    <style type="text/css">
+        .animate{
+            -webkit-transition:linear 1s;
+            transition:linear 1;
+        }
+        .animate.ng-enter{
+            opacity:0;
+        }
+        .animate.ng-enter-active{
+            opacity:1;
+        }
+
+        .animate.ng-leave{
+            opacity:1;
+        }
+        .animate.ng-leave-active{
+            opacity:0;
+        }
+    </style>
+
+</head>
+<body ng-app="myRequirementApp" ng-controller="requirementController as app">
+
+    title={{title}}
+
+    <ul>
+        <li ng-repeat="i in items" class="animate">{{i.name}}, {{i.age}}</li>
+    </ul>
+
+
+    <button ng-click="add()">Add wilma</button>
+</body>
+</html>

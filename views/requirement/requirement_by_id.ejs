@@ -1,24 +1,85 @@
 <!DOCTYPE html>
-<html ng-app="requirementModule">
+<html>
 <head>
     <title>Bootstrap 101 Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
 
-    <script src="/js/angular.min.js"></script>
-
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-animate.min.js"></script>
+    <!--<script src="http://code.angularjs.org/1.1.5/angular.js"></script>-->
 
 
     <link href="/styles/bootstrap.css" rel="stylesheet" media="screen">
     <link href="/styles/bootstrap-glyphicons.css" rel="stylesheet" media="screen">
 
+    <style type="text/css">
+
+    </style>
+
+
 </head>
-<body ng-app>
-<div class="container" ng-controller="FetchRequirements">
+<body >
 
-    <h1><%=requirement.title%></h1>
 
-</div>
+
+
+<div id="requirementApp" class="container" ng-app="RequirementDetail" ng-controller="requirementController as app" ng-init="getMasterRecord(<%= reqId %>)">
+
+    <h3>{{title}}</h3>
+
+    <div ng-repeat="t in test">
+        {{t}}
+    </div>
+
+
+
+    <h1 contenteditable="true" ng-model="masterRecord.title">dnjsdjn</h1>
+
+    <!--<h2>{{status}}</h2>-->
+
+
+
+        <div contentEditable="true" ng-model="content" title="Click to edit">some</div>
+
+
+        <!--<p contentEditable="true" ng-model="masterRecord.importance" title="Click to edit">{{masterRecord.importance | moscow}}</p>-->
+    <!--<div id='editpanel' class="editpanel"   contentEditable='true' >-->
+        <!--<select ng-model="masterRecord.importance">-->
+            <!--<option value ='volvo'>Volvo</option>-->
+            <!--<option value ='saab'>Saab</option>-->
+            <!--<option value='opel'>Opel</option>-->
+            <!--<option value='audi'>Audi</option>-->
+        <!--</select>-->
+
+    <div class="form-group">
+        <label for="importance">Importance</label>
+        <select class="form-control" name="importance" ng-model="masterRecord.importance" ng-options="i.value as i.name for i in moscowOptions">
+
+        </select>
+    </div>
+    <!--</div>-->
+
+        <pre>
+            model = {{content}}
+            title = {{title}}
+            masterrecord = {{masterRecord | json }}
+        </pre>
+
+        <!--<style type="text/css">-->
+            <!--div[contentEditable] {-->
+                <!--cursor: pointer;-->
+                <!--background-color: #D0D0D0;-->
+            <!--}-->
+        <!--</style>-->
+        <button ng-click="saveRecord()">Save</button>
+
+    <button ng-click="addTest()">test</button>
+
+<!--</div>-->
+
+
+
 
 
 
@@ -32,6 +93,20 @@
 <script src="js/respond.js"></script>
 
 <script src="/js/script.js"></script>
+
+<script type="text/javascript">
+
+//    $(document).on("ready", function(){
+//        var e = $("#requirementApp");
+//        scope = angular.element(e).scope();
+//        scope.getMasterRecord();
+////        scope.$apply(function() {
+////            this.getMasterRecord(<%= reqId %>);
+////        });
+//    })
+
+
+</script>
 
 </body>
 </html>
