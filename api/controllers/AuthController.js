@@ -16,6 +16,31 @@ var AuthController = {
         res.redirect('/');
     },
 
+    user_info: function (req, res) {
+
+//      console.log(req)
+
+      if (req.session.passport.user){
+          User.findOne({id:req.session.passport.user}).done(function(err,user){
+            res.json(user);
+          });
+      }else{
+          //bootstrap this for dev purposes
+          res.json({
+              "provider": "github",
+              "uid": 885738,
+              "userName": "lawrencm",
+              "displayName": "Matt",
+              "profileUrl": "https://github.com/lawrencm",
+              "avatar": "https://0.gravatar.com/avatar/475c66fd383f7b213899dfbab7cf0650?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png",
+              "createdAt": "2013-08-14T02:40:19.489Z",
+              "updatedAt": "2013-08-16T02:45:47.075Z",
+              "id": 9
+          })
+      }
+
+    },
+
     'github': function (req, res) {
 
 
@@ -34,7 +59,7 @@ var AuthController = {
     },
 
     'github_callback': function (req, res, next) {
-		console.log("zzzzzzzzzzzzz");
+//		console.log("zzzzzzzzzzzzz");
     	// console.log(res);
 
 //        passport.authenticate('github',function(err, user, info){

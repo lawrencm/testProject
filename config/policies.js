@@ -15,13 +15,14 @@ module.exports.policies = {
     // Default policy for all controllers and actions
     // (`true` allows public access)
 //    '*': 'authenticated',
-    '*': true,
+    '*': 'test',
 
     'requirement': {
-        '*': function () {
-            console.log("hello");
-            return true;
-        }()
+        '*': 'test'
+//        '*': function () {
+//            console.log("hello");
+//            return true;
+//        }()
     },
     'foo': {
         '*': true
@@ -29,8 +30,8 @@ module.exports.policies = {
     'auth': {
         '*': true
     },
-    'user':{
-        '*':true
+    'user': {
+        '*': true
     }
 
     /*

@@ -97,6 +97,12 @@
         user.appDisplayName() %></h1>
     <% }; %>
 
+
+
+    <div class="row">
+        <div class="col-lg-8">.col-lg-8
+
+
     <!-- Modal -->
     <div class="modal fade" id="myModal">
         <div class="modal-dialog">
@@ -147,6 +153,9 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+
+
+    <pre>{{user}}</pre>
 
 
 
@@ -207,7 +216,16 @@
         </tbody>
     </table>
 
+        </div>
+        <div class="col-lg-4">
+            <h2>Activity</h2>
+            <div ng-repeat="activity in activity_stream">
+                <b><img src="{{activity.user.avatar}}" style="width:20px;height:20px" alt=""/> {{activity.user.displayName}}</b> {{activity.userobj | json}} {{activity.verb}}  {{activity.object_type}} {{activity.object_id}}  {{activity.updatedAt | friendlydateago}}
+                <a ng-click="deleteActivity(activity.id)">delete</a>
+            </div>
 
+        </div>
+    </div>
 </div>
 
 
@@ -215,6 +233,7 @@
 <script src="/js/jquery.1.10.2.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/js/bootstrap.js"></script>
+<script src="/js/moment.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="js/respond.js"></script>

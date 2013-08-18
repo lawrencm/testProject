@@ -52,7 +52,6 @@
     );
 
 
-
 /*static vars*/
 
 var REQ_ENDPOINT = "/requirement/";
@@ -125,6 +124,7 @@ RequirementDetail.controller("requirementController", function ($scope) {
             console.log("Getting the initial data");
         });
 
+
         socket.on("message", function (msg) {
             console.log(msg);
             if (msg.model && msg.model == "requirement") {
@@ -133,22 +133,20 @@ RequirementDetail.controller("requirementController", function ($scope) {
                 if (msg.verb == "update" && msg.data.id == $scope.masterRecord.id) {
                     //find the element and update it
                     console.log("hey");
-                    $scope.masterRecord =$.extend({}, msg.data);
+                    $scope.masterRecord = $.extend({}, msg.data);
                     $scope.$apply();
                 }
 //
 //
 //                $scope.sortData();
 //            }
-        }
+            }
+
+
+        });
 
 
     });
-
-
-    });
-
-
 
 
     $scope.getMasterRecord = function (id) {
@@ -168,7 +166,7 @@ RequirementDetail.controller("requirementController", function ($scope) {
      */
     $scope.saveRecord = function () {
         // update the last updated
-        $scope.masterRecord.updatedAt = new Date();
+//        $scope.masterRecord.updatedAt = new Date();
 
         //make a copy to send to server
         var rec = $.extend({}, $scope.masterRecord);
@@ -184,14 +182,11 @@ RequirementDetail.controller("requirementController", function ($scope) {
     }
 
 
-
-
 });
 RequirementDetail.directive('contenteditable', contentEditable);
 
 
 var RequirementMaster = angular.module("RequirementMaster", ["ngAnimate"]);
-
 
 
 RequirementMaster.controller("requirementMasterController", function ($scope) {
@@ -200,6 +195,8 @@ RequirementMaster.controller("requirementMasterController", function ($scope) {
     $scope.data = [
         {}
     ];
+    $scope.activity_stream = [];
+    $scope.user = {name: "bill"};
     $scope.activeRec = {
         title: "My Title"
     };
@@ -226,10 +223,29 @@ RequirementMaster.controller("requirementMasterController", function ($scope) {
     socket.on("connect", function () {
         console.log("Socket Connected");
         socket.get(REQ_ENDPOINT, {}, function (resp) {
-            console.log("Getting the initial data");
+//            console.log("Getting the initial data");
+//            console.log(resp);
             $scope.data = resp;
             $scope.sortData();
         });
+
+
+        //get the user info
+        socket.get("/Auth/user_info", {}, function (resp) {
+            console.log(resp);
+//            $scope.xx = "hhdjdfkjfb";
+            $scope.user = $.extend({}, resp);
+            $scope.$apply();
+        })
+
+
+        //get the activity
+        socket.get("/activity/requirements_activity", {sort: 'id desc'}, function (resp) {
+            console.log(resp)
+            $scope.activity_stream = $.extend({}, resp);
+            $scope.$apply();
+        })
+
 
         socket.on("message", function (msg) {
             console.log(msg);
@@ -258,7 +274,7 @@ RequirementMaster.controller("requirementMasterController", function ($scope) {
                     //find the element and update it
                     $.each($scope.data, function (i) {
                         if ($scope.data[i].id === msg.id) {
-                            for (var k in msg.data){
+                            for (var k in msg.data) {
 //                                if ( $scope.data[i][k] != msg.data[k]){
 //                                    delete($scope.data[i][k]);
 //                                    $scope.$apply();
@@ -281,19 +297,35 @@ RequirementMaster.controller("requirementMasterController", function ($scope) {
 
 
     $scope.saveActiveRecord = function () {
-            // update the last updated
-            $scope.activeRec.updatedAt = new Date();
+        // update the last updated
+//            $scope.activeRec.updatedAt = new Date();
 
-            //make a copy to send to server
-            var rec = $.extend({}, $scope.activeRec);
+        //make a copy to send to server
+        var rec = $.extend({}, $scope.activeRec);
 
-            //delete some of the values //
-            delete(rec["createdAt"]);
-            delete(rec["updatedAt"]);
-            delete(rec["$$hashKey"]);
+        //delete some of the values //
+        delete(rec["createdAt"]);
+        delete(rec["updatedAt"]);
+        delete(rec["$$hashKey"]);
+        rec.lastUpdatedBy = $scope.user.id;
 
-            socket.put(REQ_ENDPOINT, rec, function () {
+        console.log(rec);
+
+        socket.put(REQ_ENDPOINT, rec, function () {
 //                alert("Record Updated");
+        });
+    }
+
+
+    $scope.deleteActivity = function (actId) {
+        console.log(actId);
+        socket.delete("/Activity", {
+                id: actId
+            },
+            function (resp) {
+//                $scope.updateLocalDataItem(reqId, "destroy");
+//                $scope.status = status;
+                console.log("deleted activity");
             });
     }
 
@@ -313,6 +345,7 @@ RequirementMaster.controller("requirementMasterController", function ($scope) {
                 else if (action == "active") {
                     $scope.activeRecMaster = angular.copy($scope.data[i]);
                     $scope.activeRec = $scope.data[i];
+                    $scope.activeRec.lastUpdatedBy = $scope.user.id;
                 }
 
                 return false;
@@ -352,9 +385,9 @@ RequirementMaster.controller("requirementMasterController", function ($scope) {
 
 
     $scope.sortData = function () {
-        console.log("Sorting the data");
+//        console.log("Sorting the data");
 
-        console.log($scope.data);
+//        console.log($scope.data);
         $scope.data.sort(function (a, b) {
             return a.id - b.id;
         });
@@ -376,9 +409,9 @@ RequirementMaster.directive('contenteditable', function () {
         link: function (scope, elm, attrs, ctrl) {
             // view -> model
 
-            elm.on('click',function(){
+            elm.on('click', function () {
                 scope.$apply(function () {
-                    scope.updateLocalDataItem(scope.req.id,'active');
+                    scope.updateLocalDataItem(scope.req.id, 'active');
 
                 });
 //                console.log(scope.req.id);
@@ -396,7 +429,7 @@ RequirementMaster.directive('contenteditable', function () {
 
             // model -> view
             ctrl.$render = function () {
-                console.log("render");
+//                console.log("render");
                 elm.html(ctrl.$viewValue);
             };
 
@@ -404,17 +437,18 @@ RequirementMaster.directive('contenteditable', function () {
             // load init value from DOM
 //            ctrl.$setViewValue(elm.text());
         }
-    }});
+    }
+});
 
-RequirementMaster.directive('notifychange', function() {
-    return function(scope, elm, attr) {
-        attr.$observe('ngBindTemplate', function(value) {
+RequirementMaster.directive('notifychange', function () {
+    return function (scope, elm, attr) {
+        attr.$observe('ngBindTemplate', function (value) {
             //if class of clean do nothing
-            if (elm.hasClass("clean")){
+            if (elm.hasClass("clean")) {
                 elm.removeClass("clean");
-            }else{
+            } else {
                 elm.addClass("notify");
-                elm.bind('webkitAnimationEnd', function(){
+                elm.bind('webkitAnimationEnd', function () {
                     elm.removeClass("notify");
                 });
             }
@@ -423,6 +457,11 @@ RequirementMaster.directive('notifychange', function() {
 });
 
 
+RequirementMaster.filter('friendlydateago', function () {
+    return function (input) {
+        return moment(input).startOf('day').fromNow();
+    }
+});
 
 
 RequirementMaster.filter('moscow', function () {
